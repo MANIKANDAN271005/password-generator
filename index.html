@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Password Generator | Manikandan</title>
+
+    <meta name="description"
+        content="Generate secure passwords with customizable length, uppercase, lowercase, numbers, symbols, password strength indicator, dark mode, and responsive design.">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/favicon.ico">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+
+    <div class="background"></div>
+
+    <main class="container">
+
+        <div class="header">
+
+            <h1>
+                <i class="fa-solid fa-shield-halved"></i>
+                Password Generator
+            </h1>
+
+            <button id="themeBtn" aria-label="Toggle Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+
+        </div>
+
+        <div class="display">
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Generate Secure Password"
+                readonly
+                autocomplete="off"
+                aria-label="Generated Password">
+
+            <button id="toggleBtn" title="Show Password" aria-label="Show or Hide Password">
+                <i class="fa-solid fa-eye"></i>
+            </button>
+
+            <button id="copyBtn" title="Copy Password" aria-label="Copy Password">
+                <i class="fa-solid fa-copy"></i>
+            </button>
+
+        </div>
+
+        <div class="settings">
+
+            <div class="setting">
+
+                <label for="length">Password Length</label>
+
+                <span id="lengthValue">12</span>
+
+            </div>
+
+            <input
+                type="range"
+                id="length"
+                min="4"
+                max="32"
+                value="12">
+
+            <div class="option">
+                <input type="checkbox" id="uppercase" checked>
+                <label for="uppercase">Uppercase Letters</label>
+            </div>
+
+            <div class="option">
+                <input type="checkbox" id="lowercase" checked>
+                <label for="lowercase">Lowercase Letters</label>
+            </div>
+
+            <div class="option">
+                <input type="checkbox" id="numbers" checked>
+                <label for="numbers">Numbers</label>
+            </div>
+
+            <div class="option">
+                <input type="checkbox" id="symbols" checked>
+                <label for="symbols">Symbols</label>
+            </div>
+
+            <div class="strength">
+
+                <span>Password Strength</span>
+
+                <span id="strengthText">Strong</span>
+
+            </div>
+
+            <div class="strengthBar">
+
+                <div id="strengthFill"></div>
+
+            </div>
+
+            <button id="generateBtn">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                Generate Password
+            </button>
+
+        </div>
+
+        <!-- Password History -->
+
+        <div class="history">
+
+            <h3>Recent Passwords</h3>
+
+            <ul id="historyList"></ul>
+
+            <button id="clearHistoryBtn">
+                🗑 Clear History
+            </button>
+
+        </div>
+
+        <footer>
+
+            © 2026 Manikandan N
+
+        </footer>
+
+    </main>
+
+    <div id="toast">
+        Password Copied Successfully!
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
