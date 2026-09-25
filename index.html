@@ -35,12 +35,12 @@
         <div class="header">
 
             <h1>
-                <i class="fa-solid fa-shield-halved"></i>
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
                 Password Generator
             </h1>
 
-            <button id="themeBtn" aria-label="Toggle Dark Mode">
-                <i class="fa-solid fa-moon"></i>
+            <button id="themeBtn" aria-label="Toggle Dark Mode" aria-pressed="false">
+                <i class="fa-solid fa-moon" aria-hidden="true"></i>
             </button>
 
         </div>
@@ -55,12 +55,12 @@
                 autocomplete="off"
                 aria-label="Generated Password">
 
-            <button id="toggleBtn" title="Show Password" aria-label="Show or Hide Password">
-                <i class="fa-solid fa-eye"></i>
+            <button id="toggleBtn" title="Show Password" aria-label="Show Password" aria-pressed="false">
+                <i class="fa-solid fa-eye" aria-hidden="true"></i>
             </button>
 
             <button id="copyBtn" title="Copy Password" aria-label="Copy Password">
-                <i class="fa-solid fa-copy"></i>
+                <i class="fa-solid fa-copy" aria-hidden="true"></i>
             </button>
 
         </div>
@@ -117,7 +117,7 @@
             </div>
 
             <button id="generateBtn">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
                 Generate Password
             </button>
 
@@ -127,12 +127,13 @@
 
         <div class="history">
 
-            <h3>Recent Passwords</h3>
+            <h2>Recent Passwords</h2>
 
             <ul id="historyList"></ul>
 
             <button id="clearHistoryBtn">
-                🗑 Clear History
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                Clear History
             </button>
 
         </div>
@@ -145,7 +146,7 @@
 
     </main>
 
-    <div id="toast">
+    <div id="toast" role="status" aria-live="polite">
         Password Copied Successfully!
     </div>
 

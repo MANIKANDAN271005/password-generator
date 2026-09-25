@@ -27,9 +27,9 @@ body{
 
     background:linear-gradient(
         135deg,
-        #667eea,
-        #764ba2,
-        #6dd5fa
+        #1a1033,
+        #3b1f5c,
+        #6b2f6e
     );
 
     animation:pageLoad .8s ease;
@@ -100,7 +100,7 @@ body{
 
     height:260px;
 
-    background:#3b82f6;
+    background:#d4af37;
 
     top:-70px;
 
@@ -114,7 +114,7 @@ body{
 
     height:320px;
 
-    background:#8b5cf6;
+    background:#7b2cbf;
 
     bottom:-80px;
 
@@ -128,7 +128,7 @@ body{
 
     height:180px;
 
-    background:#06b6d4;
+    background:#b76e79;
 
     top:45%;
 
@@ -166,14 +166,14 @@ body{
 
     border-radius:22px;
 
-    background:rgba(255,255,255,.12);
+    background:rgba(255,255,255,.08);
 
-    border:1px solid rgba(255,255,255,.18);
+    border:1px solid rgba(245,210,122,.25);
 
     backdrop-filter:blur(22px);
 
     box-shadow:
-        0 8px 32px rgba(0,0,0,.30);
+        0 8px 32px rgba(0,0,0,.40);
 
     color:white;
 
@@ -237,6 +237,8 @@ body{
 
     align-items:center;
 
+    gap:12px;
+
     margin-bottom:25px;
 
 }
@@ -255,11 +257,19 @@ body{
 
 }
 
+.header h1 i{
+
+    color:#f5d27a;
+
+}
+
 #themeBtn{
 
     width:45px;
 
     height:45px;
+
+    flex-shrink:0;
 
     border:none;
 
@@ -307,6 +317,8 @@ body{
 
     flex:1;
 
+    min-width:0;
+
     padding:14px;
 
     border:none;
@@ -333,7 +345,7 @@ body{
 
 .display input:focus{
 
-    box-shadow:0 0 12px rgba(59,130,246,.45);
+    box-shadow:0 0 12px rgba(212,175,55,.45);
 
 }
 
@@ -355,13 +367,15 @@ body{
 
 #toggleBtn{
 
-    background:#5c6bc0;
+    background:#4c2a85;
 
 }
 
 #copyBtn{
 
-    background:#00d084;
+    background:#d4af37;
+
+    color:#1a1033;
 
     border-radius:0 12px 12px 0;
 
@@ -369,13 +383,13 @@ body{
 
 #toggleBtn:hover{
 
-    background:#3f51b5;
+    background:#3b1f6b;
 
 }
 
 #copyBtn:hover{
 
-    background:#00a96e;
+    background:#c09a2a;
 
 }
 
@@ -405,7 +419,7 @@ input[type="range"]{
 
     margin-bottom:20px;
 
-    accent-color:#3b82f6;
+    accent-color:#d4af37;
 
 }
 
@@ -424,6 +438,8 @@ input[type="range"]{
 .option input{
 
     transform:scale(1.2);
+
+    accent-color:#d4af37;
 
     cursor:pointer;
 
@@ -471,7 +487,7 @@ input[type="range"]{
 
     height:100%;
 
-    background:#22c55e;
+    background:#5fbf9a;
 
     transition:.4s;
 
@@ -491,11 +507,12 @@ input[type="range"]{
 
     background:linear-gradient(
         135deg,
-        #3b82f6,
-        #8b5cf6
+        #f5d27a,
+        #d4af37,
+        #b8862b
     );
 
-    color:white;
+    color:#1a1033;
 
     font-size:18px;
 
@@ -506,7 +523,7 @@ input[type="range"]{
     transition:.3s;
 
     box-shadow:
-        0 10px 25px rgba(59,130,246,.35);
+        0 10px 25px rgba(212,175,55,.30);
 
 }
 
@@ -517,7 +534,7 @@ input[type="range"]{
     filter:brightness(1.08);
 
     box-shadow:
-        0 15px 35px rgba(59,130,246,.45);
+        0 15px 35px rgba(212,175,55,.45);
 
 }
 
@@ -531,7 +548,7 @@ input[type="range"]{
 
 }
 
-.history h3{
+.history h2{
 
     font-size:18px;
 
@@ -550,6 +567,10 @@ input[type="range"]{
     overflow-y:auto;
 
     padding-right:5px;
+
+    scrollbar-width:thin;
+
+    scrollbar-color:#d4af37 transparent;
 
 }
 
@@ -589,7 +610,7 @@ input[type="range"]{
 
 .history ul::-webkit-scrollbar-thumb{
 
-    background:#3b82f6;
+    background:#d4af37;
 
     border-radius:20px;
 
@@ -611,7 +632,7 @@ input[type="range"]{
 
     border-radius:12px;
 
-    background:#ef4444;
+    background:#8e2a3c;
 
     color:white;
 
@@ -627,7 +648,7 @@ input[type="range"]{
 
 #clearHistoryBtn:hover{
 
-    background:#dc2626;
+    background:#74202f;
 
     transform:translateY(-2px);
 
@@ -647,9 +668,11 @@ input[type="range"]{
 
     padding:14px 22px;
 
-    background:#22c55e;
+    background:#1f1633;
 
-    color:white;
+    color:#f5d27a;
+
+    border:1px solid rgba(212,175,55,.5);
 
     border-radius:10px;
 
@@ -705,11 +728,11 @@ body.dark{
 
         135deg,
 
-        #111827,
+        #0b0a10,
 
-        #1e293b,
+        #17131f,
 
-        #0f172a
+        #0d0b12
 
     );
 
@@ -717,9 +740,9 @@ body.dark{
 
 body.dark .container{
 
-    background:rgba(18,18,18,.55);
+    background:rgba(20,17,28,.60);
 
-    border:1px solid rgba(255,255,255,.08);
+    border:1px solid rgba(212,175,55,.18);
 
 }
 
@@ -745,13 +768,25 @@ body.dark #themeBtn{
 
 body.dark #toggleBtn{
 
-    background:#2563eb;
+    background:#2a2438;
+
+}
+
+body.dark #toggleBtn:hover{
+
+    background:#372f4a;
 
 }
 
 body.dark #copyBtn{
 
-    background:#2563eb;
+    background:#c9a227;
+
+}
+
+body.dark #copyBtn:hover{
+
+    background:#a88720;
 
 }
 
@@ -761,9 +796,11 @@ body.dark #generateBtn{
 
         135deg,
 
-        #2563eb,
+        #e6c262,
 
-        #4f46e5
+        #c9a227,
+
+        #9c7a1c
 
     );
 
@@ -771,7 +808,7 @@ body.dark #generateBtn{
 
 body.dark #generateBtn:hover{
 
-    box-shadow:0 15px 35px rgba(37,99,235,.4);
+    box-shadow:0 15px 35px rgba(201,162,39,.35);
 
 }
 
@@ -793,13 +830,48 @@ body.dark .history li:hover{
    SMOOTH TRANSITIONS
 =========================== */
 
-body,
-.container,
-button,
-input,
-.history li{
+.container{
 
     transition:.3s ease;
+
+}
+
+/* ===========================
+   FOCUS STATES
+=========================== */
+
+button:focus-visible,
+.history li:focus-visible,
+.option input:focus-visible,
+input[type="range"]:focus-visible{
+
+    outline:2px solid #f5d27a;
+
+    outline-offset:2px;
+
+}
+
+.display button:focus-visible{
+
+    outline-offset:-4px;
+
+}
+
+/* ===========================
+   REDUCED MOTION
+=========================== */
+
+@media (prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+
+        animation:none !important;
+
+        transition:none !important;
+
+    }
 
 }
 
@@ -845,7 +917,7 @@ input,
 
     .display input{
 
-        width:100%;
+        flex:1 1 100%;
 
         border-radius:12px;
 

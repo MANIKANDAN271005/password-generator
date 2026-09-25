@@ -56,26 +56,39 @@ length.addEventListener("input", () => {
 // RANDOM CHARACTER
 // ======================================
 
-function randomChar(chars) {
+function randomIndex(max) {
 
     const randomArray = new Uint32Array(1);
 
     window.crypto.getRandomValues(randomArray);
 
-    return chars[randomArray[0] % chars.length];
+    return randomArray[0] % max;
+
+}
+
+function randomChar(chars) {
+
+    return chars[randomIndex(chars.length)];
 
 }
 
 // ======================================
-// SHUFFLE PASSWORD
+// SHUFFLE PASSWORD (Fisher-Yates)
 // ======================================
 
 function shufflePassword(pass) {
 
-    return pass
-        .split("")
-        .sort(() => Math.random() - 0.5)
-        .join("");
+    const chars = pass.split("");
+
+    for (let i = chars.length - 1; i > 0; i--) {
+
+        const j = randomIndex(i + 1);
+
+        [chars[i], chars[j]] = [chars[j], chars[i]];
+
+    }
+
+    return chars.join("");
 
 }
 
@@ -83,17 +96,108 @@ function shufflePassword(pass) {
 // TOAST MESSAGE
 // ======================================
 
+let toastTimer;
+
 function showToast(message) {
 
     toast.textContent = message;
 
     toast.classList.add("show");
 
-    setTimeout(() => {
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
 
         toast.classList.remove("show");
 
     }, 2000);
+
+}
+
+// ======================================
+// STORAGE (safe when localStorage is blocked)
+// ======================================
+
+function getStored(key) {
+
+    try {
+
+        return localStorage.getItem(key);
+
+    } catch {
+
+        return null;
+
+    }
+
+}
+
+function setStored(key, value) {
+
+    try {
+
+        localStorage.setItem(key, value);
+
+    } catch {
+
+        // Storage unavailable (private mode / blocked cookies)
+
+    }
+
+}
+
+// ======================================
+// COPY TO CLIPBOARD
+// ======================================
+
+function copyText(text) {
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        navigator.clipboard.writeText(text)
+            .then(() => showToast("Password Copied!"))
+            .catch(() => fallbackCopy(text));
+
+    } else {
+
+        fallbackCopy(text);
+
+    }
+
+}
+
+function fallbackCopy(text) {
+
+    const previousFocus = document.activeElement;
+
+    const temp = document.createElement("textarea");
+
+    temp.value = text;
+    temp.setAttribute("readonly", "");
+    temp.style.position = "fixed";
+    temp.style.opacity = "0";
+
+    document.body.appendChild(temp);
+
+    temp.select();
+
+    let copied = false;
+
+    try {
+
+        copied = document.execCommand("copy");
+
+    } catch {
+
+        copied = false;
+
+    }
+
+    document.body.removeChild(temp);
+
+    if (previousFocus) previousFocus.focus();
+
+    showToast(copied ? "Password Copied!" : "Copy failed. Please copy manually.");
 
 }
 
@@ -164,9 +268,7 @@ function generatePassword(saveToHistory = true) {
 
         saveHistory();
 
-        historyList.innerHTML = "";
-
-        passwordHistory.forEach(createHistoryItem);
+        renderHistory();
 
     }
 
@@ -180,45 +282,48 @@ function generatePassword(saveToHistory = true) {
 
 function checkStrength() {
 
-    let score = 0;
+    // Entropy in bits = length × log2(character pool size)
 
-    if (uppercase.checked) score++;
-    if (lowercase.checked) score++;
-    if (numbers.checked) score++;
-    if (symbols.checked) score++;
-    if (Number(length.value) >= 12) score++;
+    let poolSize = 0;
 
-    if (score <= 2) {
+    if (uppercase.checked) poolSize += upper.length;
+    if (lowercase.checked) poolSize += lower.length;
+    if (numbers.checked) poolSize += number.length;
+    if (symbols.checked) poolSize += symbol.length;
+
+    const entropy = Number(length.value) * Math.log2(poolSize);
+
+    if (entropy < 40) {
 
         strengthText.textContent = "Weak";
-        strengthText.style.color = "#ef4444";
+        strengthText.style.color = "#e0626d";
 
         strengthFill.style.width = "25%";
-        strengthFill.style.background = "#ef4444";
+        strengthFill.style.background = "#e0626d";
 
-    } else if (score === 3) {
+    } else if (entropy < 60) {
 
         strengthText.textContent = "Medium";
-        strengthText.style.color = "#f59e0b";
+        strengthText.style.color = "#e8a85c";
 
         strengthFill.style.width = "50%";
-        strengthFill.style.background = "#f59e0b";
+        strengthFill.style.background = "#e8a85c";
 
-    } else if (score === 4) {
+    } else if (entropy < 80) {
 
         strengthText.textContent = "Strong";
-        strengthText.style.color = "#22c55e";
+        strengthText.style.color = "#5fbf9a";
 
         strengthFill.style.width = "75%";
-        strengthFill.style.background = "#22c55e";
+        strengthFill.style.background = "#5fbf9a";
 
     } else {
 
         strengthText.textContent = "Very Strong";
-        strengthText.style.color = "#3b82f6";
+        strengthText.style.color = "#f5d27a";
 
         strengthFill.style.width = "100%";
-        strengthFill.style.background = "#3b82f6";
+        strengthFill.style.background = "#f5d27a";
 
     }
 
@@ -234,21 +339,39 @@ function createHistoryItem(pass) {
 
     li.textContent = "📋 " + pass;
 
-    li.addEventListener("click", () => {
+    li.tabIndex = 0;
+    li.setAttribute("role", "button");
+    li.title = "Copy Password";
 
-        navigator.clipboard.writeText(pass);
+    li.addEventListener("click", () => copyText(pass));
 
-        showToast("Password Copied!");
+    li.addEventListener("keydown", (e) => {
+
+        if (e.key === "Enter" || e.key === " ") {
+
+            e.preventDefault();
+
+            copyText(pass);
+
+        }
 
     });
 
-    historyList.prepend(li);
+    historyList.append(li);
+
+}
+
+function renderHistory() {
+
+    historyList.innerHTML = "";
+
+    passwordHistory.forEach(createHistoryItem);
 
 }
 
 function saveHistory() {
 
-    localStorage.setItem(
+    setStored(
         "passwordHistory",
         JSON.stringify(passwordHistory)
     );
@@ -257,15 +380,23 @@ function saveHistory() {
 
 function loadHistory() {
 
-    const saved = localStorage.getItem("passwordHistory");
+    let saved;
 
-    if (!saved) return;
+    try {
 
-    passwordHistory = JSON.parse(saved);
+        saved = JSON.parse(getStored("passwordHistory"));
 
-    historyList.innerHTML = "";
+    } catch {
 
-    passwordHistory.forEach(createHistoryItem);
+        saved = null;
+
+    }
+
+    if (!Array.isArray(saved)) return;
+
+    passwordHistory = saved.slice(0, 5);
+
+    renderHistory();
 
 }
 
@@ -277,9 +408,7 @@ copyBtn.addEventListener("click", () => {
 
     if (password.value === "") return;
 
-    navigator.clipboard.writeText(password.value);
-
-    showToast("Password Copied!");
+    copyText(password.value);
 
 });
 
@@ -289,21 +418,17 @@ copyBtn.addEventListener("click", () => {
 
 toggleBtn.addEventListener("click", () => {
 
-    if (password.type === "password") {
+    const show = password.type === "password";
 
-        password.type = "text";
+    password.type = show ? "text" : "password";
 
-        toggleBtn.innerHTML =
-            '<i class="fa-solid fa-eye-slash"></i>';
+    toggleBtn.innerHTML = show
+        ? '<i class="fa-solid fa-eye-slash" aria-hidden="true"></i>'
+        : '<i class="fa-solid fa-eye" aria-hidden="true"></i>';
 
-    } else {
+    toggleBtn.title = show ? "Hide Password" : "Show Password";
 
-        password.type = "password";
-
-        toggleBtn.innerHTML =
-            '<i class="fa-solid fa-eye"></i>';
-
-    }
+    toggleBtn.setAttribute("aria-pressed", String(show));
 
 });
 
@@ -321,10 +446,28 @@ generateBtn.addEventListener("click", () => {
 // AUTO GENERATE WHEN OPTIONS CHANGE
 // ======================================
 
-uppercase.addEventListener("change", () => generatePassword(false));
-lowercase.addEventListener("change", () => generatePassword(false));
-numbers.addEventListener("change", () => generatePassword(false));
-symbols.addEventListener("change", () => generatePassword(false));
+[uppercase, lowercase, numbers, symbols].forEach((option) => {
+
+    option.addEventListener("change", () => {
+
+        // Keep at least one character type selected
+
+        if (!uppercase.checked && !lowercase.checked &&
+            !numbers.checked && !symbols.checked) {
+
+            option.checked = true;
+
+            showToast("Select at least one character type");
+
+            return;
+
+        }
+
+        generatePassword(false);
+
+    });
+
+});
 
 // ======================================
 // CLEAR HISTORY
@@ -334,9 +477,9 @@ clearHistoryBtn.addEventListener("click", () => {
 
     passwordHistory = [];
 
-    historyList.innerHTML = "";
+    renderHistory();
 
-    localStorage.removeItem("passwordHistory");
+    saveHistory();
 
     showToast("History Cleared");
 
@@ -346,25 +489,25 @@ clearHistoryBtn.addEventListener("click", () => {
 // DARK MODE
 // ======================================
 
+function applyTheme(isDark) {
+
+    document.body.classList.toggle("dark", isDark);
+
+    themeBtn.innerHTML = isDark
+        ? '<i class="fa-solid fa-sun" aria-hidden="true"></i>'
+        : '<i class="fa-solid fa-moon" aria-hidden="true"></i>';
+
+    themeBtn.setAttribute("aria-pressed", String(isDark));
+
+}
+
 themeBtn.addEventListener("click", () => {
 
-    document.body.classList.toggle("dark");
+    const isDark = !document.body.classList.contains("dark");
 
-    if (document.body.classList.contains("dark")) {
+    applyTheme(isDark);
 
-        localStorage.setItem("theme", "dark");
-
-        themeBtn.innerHTML =
-            '<i class="fa-solid fa-sun"></i>';
-
-    } else {
-
-        localStorage.setItem("theme", "light");
-
-        themeBtn.innerHTML =
-            '<i class="fa-solid fa-moon"></i>';
-
-    }
+    setStored("theme", isDark ? "dark" : "light");
 
 });
 
@@ -372,12 +515,9 @@ themeBtn.addEventListener("click", () => {
 // LOAD SAVED THEME
 // ======================================
 
-if (localStorage.getItem("theme") === "dark") {
+if (getStored("theme") === "dark") {
 
-    document.body.classList.add("dark");
-
-    themeBtn.innerHTML =
-        '<i class="fa-solid fa-sun"></i>';
+    applyTheme(true);
 
 }
 
